@@ -32,7 +32,7 @@ public class main {
         builder.setStatus(OnlineStatus.ONLINE);
         builder.setActivity(Activity.playing(status));
         builder.enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES);
-        builder.addEventListeners(new memes(), new commands(), new commandRegister());
+        builder.addEventListeners(new commands(), new commandRegister(), new music.audioPlayerSendHandler(), new music.musicController());
         shardManager = builder.build();
     }
 
