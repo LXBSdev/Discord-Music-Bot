@@ -13,27 +13,37 @@ import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 
 import io.github.cdimascio.dotenv.Dotenv;
+import main.commands.CommandRegister;
+import main.commands.JoinCommand;
+import main.commands.LeaveCommand;
+import main.music.PlayerManager;
 
-public class main {
+public class Main {
+
+    public static Main INSTANCE;
+
+    public ShardManager shardManager;
+    public AudioPlayerManager audioPlayerManager;
+    public PlayerManager playerManager;
 
     private final Dotenv config = Dotenv.configure().load();
     String token = config.get("TOKEN");
     String status = config.get("STATUS");
 
-    private final ShardManager shardManager;
+    public Main() throws LoginException {
+        INSTANCE = this;
 
-    public AudioPlayerManager audioPlayerManager;
-
-    public main() throws LoginException {
         this.audioPlayerManager = new DefaultAudioPlayerManager();
-        AudioSourceManagers.registerLocalSource(audioPlayerManager);
-        audioPlayerManager.getConfiguration().setFilterHotSwapEnabled(true);
+        this.playerManager = new PlayerManager();
+
         DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.createDefault(token);
         builder.setStatus(OnlineStatus.ONLINE);
         builder.setActivity(Activity.playing(status));
         builder.enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES);
-        builder.addEventListeners(new commands(), new commandRegister(), new music.audioPlayerSendHandler(), new music.musicController());
+        builder.addEventListeners(new CommandRegister(), new JoinCommand(), new LeaveCommand());
         shardManager = builder.build();
+        AudioSourceManagers.registerLocalSource(audioPlayerManager);
+        audioPlayerManager.getConfiguration().setFilterHotSwapEnabled(true);
     }
 
     public ShardManager getShardManager() {
@@ -42,8 +52,8 @@ public class main {
 
     public static void main(String[] args) {
         try {
-            main bot = new main();
-            System.out.println("SUCCESS: The LXBS Meme Bot is now online");
+            Main bot = new Main();
+            System.out.println("SUCCESS: The LXBS Music Bot is now online");
         } catch (LoginException exception) {
             System.out.println("ERROR: Provided bot token is invalid");
         }
