@@ -16,11 +16,12 @@ import io.github.cdimascio.dotenv.Dotenv;
 import main.commands.CommandRegister;
 import main.commands.JoinCommand;
 import main.commands.LeaveCommand;
+import main.commands.PlayCommand;
 import main.music.PlayerManager;
 
-public class Main {
+public class main {
 
-    public static Main INSTANCE;
+    public static main INSTANCE;
 
     public ShardManager shardManager;
     public AudioPlayerManager audioPlayerManager;
@@ -30,7 +31,7 @@ public class Main {
     String token = config.get("TOKEN");
     String status = config.get("STATUS");
 
-    public Main() throws LoginException {
+    public main() throws LoginException {
         INSTANCE = this;
 
         this.audioPlayerManager = new DefaultAudioPlayerManager();
@@ -40,7 +41,7 @@ public class Main {
         builder.setStatus(OnlineStatus.ONLINE);
         builder.setActivity(Activity.playing(status));
         builder.enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES);
-        builder.addEventListeners(new CommandRegister(), new JoinCommand(), new LeaveCommand());
+        builder.addEventListeners(new CommandRegister(), new JoinCommand(), new LeaveCommand(), new PlayCommand());
         shardManager = builder.build();
         AudioSourceManagers.registerLocalSource(audioPlayerManager);
         audioPlayerManager.getConfiguration().setFilterHotSwapEnabled(true);
@@ -52,7 +53,7 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-            Main bot = new Main();
+            main bot = new main();
             System.out.println("SUCCESS: The LXBS Music Bot is now online");
         } catch (LoginException exception) {
             System.out.println("ERROR: Provided bot token is invalid");

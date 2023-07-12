@@ -2,7 +2,7 @@ package main.music;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-import main.Main;
+import main.main;
 
 public class PlayerManager {
 
@@ -18,7 +18,7 @@ public class PlayerManager {
         if (this.controller.containsKey(guildId)) {
             mc = this.controller.get(guildId);
         } else {
-            mc = new MusicController(Main.INSTANCE.shardManager.getGuildById(guildId));
+            mc = new MusicController(main.INSTANCE.shardManager.getGuildById(guildId));
 
             this.controller.put(guildId, mc);
         }

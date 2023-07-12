@@ -4,7 +4,7 @@ import javax.annotation.Nonnull;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 
-import main.Main;
+import main.main;
 import main.music.AudioLoadResult;
 import main.music.MusicController;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -18,15 +18,15 @@ public class PlayCommand extends ListenerAdapter{
 
     @Override
     public void onSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
-        if (event.getName().equals("join")) {
+        if (event.getName().equals("play")) {
             Member member = event.getMember();
             AudioManager manager = event.getGuild().getAudioManager();
             AudioChannel channel = event.getMember().getVoiceState().getChannel();
             EmbedBuilder emb = new EmbedBuilder();
-            MusicController controller = Main.INSTANCE.playerManager.getController(member.getGuild().getIdLong());
+            MusicController controller = main.INSTANCE.playerManager.getController(member.getGuild().getIdLong());
             if (member.getVoiceState().getChannel() != null) {
                 if (!manager.isConnected() | manager.getConnectedChannel() == channel) {
-                    AudioPlayerManager apm = Main.INSTANCE.audioPlayerManager;
+                    AudioPlayerManager apm = main.INSTANCE.audioPlayerManager;
                     if (!manager.isConnected()) {
                         emb.setDescription("Let's have some fun");
                         manager.openAudioConnection(channel);
@@ -35,12 +35,13 @@ public class PlayCommand extends ListenerAdapter{
                     }
                     if (event.getOption("url") != null) {
                         String url = event.getOption("url").toString();
-                        emb.setDescription("Let's have some fun");
+                        emb.setDescription("playing your track");
                         event.replyEmbeds(emb.build()).queue();
                         if (!url.startsWith("http")) {
-                            url = "ytsearch" + url;
+                            url = "ytsearch: " + url;
                         }
                         apm.loadItem(url, new AudioLoadResult(controller, url));
+                        event.replyEmbeds(emb.build()).queue();
                     } else {
 
                     }
