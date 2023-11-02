@@ -3,6 +3,8 @@ package main.commands;
 import javax.annotation.Nonnull;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
+import com.sedmelluq.discord.lavaplayer.tools.io.MessageInput;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
 import main.main;
 import main.music.AudioLoadResult;
@@ -28,22 +30,21 @@ public class PlayCommand extends ListenerAdapter{
                 if (!manager.isConnected() | manager.getConnectedChannel() == channel) {
                     AudioPlayerManager apm = main.INSTANCE.audioPlayerManager;
                     if (!manager.isConnected()) {
-                        emb.setDescription("Let's have some fun");
                         manager.openAudioConnection(channel);
                         manager.setSelfDeafened(true);
-                        event.replyEmbeds(emb.build()).queue();
                     }
                     if (event.getOption("url") != null) {
-                        String url = event.getOption("url").toString();
-                        emb.setDescription("playing your track");
-                        event.replyEmbeds(emb.build()).queue();
+                        String url = event.getOption("url").getAsString();
                         if (!url.startsWith("http")) {
                             url = "ytsearch: " + url;
                         }
+                        emb.setDescription("playing your track");
+                        System.out.println(url);
                         apm.loadItem(url, new AudioLoadResult(controller, url));
                         event.replyEmbeds(emb.build()).queue();
-                    } else {
-
+                        return;
+                    } else if (controller.getPlayer().isPaused()) {
+                        controller.getPlayer().playTrack(null);
                     }
                 } else {
                     emb.setDescription("Sorry, I'm already rickrolling someone else");

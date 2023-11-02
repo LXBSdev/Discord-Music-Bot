@@ -20,7 +20,7 @@ public class CommandRegister extends ListenerAdapter {
                 commandData.add(Commands.slash("leave", "Make the bot leave from voice"));
                 commandData.add(Commands.slash("join", "Make the bot join"));
                 commandData.add(Commands.slash("play", "Make the bot play music")
-                        .addOption(OptionType.STRING, "url", "The url to the track you want to play", true));
+                        .addOption(OptionType.STRING, "url", "The url to the track you want to play", false));
                 event.getGuild().updateCommands().addCommands(commandData).queue();
         }
 
@@ -30,7 +30,7 @@ public class CommandRegister extends ListenerAdapter {
                 commandData.add(Commands.slash("leave", "Make the bot leave from voice"));
                 commandData.add(Commands.slash("join", "Make the bot join"));
                 commandData.add(Commands.slash("play", "Make the bot play music")
-                        .addOption(OptionType.STRING, "url", "The url to the track you want to play", true));
+                        .addOption(OptionType.STRING, "url", "The url to the track you want to play", false));
                 event.getGuild().updateCommands().addCommands(commandData).queue();
         }
 }
